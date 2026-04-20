@@ -2,98 +2,34 @@
  * Cute Weather & Mood Indicator
  * Licensed under GNU Affero General Public License v3.0
  * Hand-crafted with love at Cutesense Studios
- * Generated with Gemini
+ * Updated to use local assets and lucide-react
  */
 
 import React, { useState, useEffect, useRef } from 'react';
+import { 
+  Sun, 
+  Cloud, 
+  CloudRain, 
+  CloudLightning, 
+  Snowflake, 
+  MapPin, 
+  RefreshCw, 
+  Heart, 
+  Scale, 
+  Sparkles, 
+  Clock, 
+  Volume2, 
+  VolumeX 
+} from 'lucide-react';
 
-// --- Lucide Icons (Inline SVGs) ---
-const IconSun = ({ className }) => (
-  <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>
-  </svg>
-);
-
-const IconCloud = ({ className }) => (
-  <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
-  </svg>
-);
-
-const IconCloudRain = ({ className }) => (
-  <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M16 14v6"/><path d="M8 14v6"/><path d="M12 16v6"/>
-  </svg>
-);
-
-const IconCloudLightning = ({ className }) => (
-  <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M6 16.326A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 .5 8.973"/><path d="m13 12-3 5h4l-3 5"/>
-  </svg>
-);
-
-const IconSnowflake = ({ className }) => (
-  <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="m20 16-4-4 4-4"/><path d="m4 8 4 4-4 4"/><path d="m16 4-4 4-4-4"/><path d="m8 20 4-4 4 4"/><path d="M12 2v20"/><path d="M2 12h20"/>
-  </svg>
-);
-
-const IconMapPin = ({ className }) => (
-  <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
-  </svg>
-);
-
-const IconRefreshCw = ({ className }) => (
-  <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>
-  </svg>
-);
-
-const IconHeart = ({ className, fill = "none" }) => (
-  <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill={fill} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
-  </svg>
-);
-
-const IconScale = ({ className }) => (
-  <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h18"/>
-  </svg>
-);
-
-const IconSparkles = ({ className }) => (
-  <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="m12 3 1.912 5.813a2 2 0 0 0 1.275 1.275L21 12l-5.813 1.912a2 2 0 0 0-1.275 1.275L12 21l-1.912-5.813a2 2 0 0 0-1.275-1.275L3 12l5.813-1.912a2 2 0 0 0 1.275-1.275L12 3Z"/>
-  </svg>
-);
-
-const IconClock = ({ className }) => (
-  <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-  </svg>
-);
-
-const IconVolume2 = ({ className }) => (
-  <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
-  </svg>
-);
-
-const IconVolumeX = ({ className }) => (
-  <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="22" y1="9" x2="16" y2="15"/><line x1="16" y1="9" x2="22" y2="15"/>
-  </svg>
-);
-
-// --- Fixed Atmospheric Sounds (Nature-focused, non-"funny" loops) ---
+// --- Weather Dictionary using Lucide Components ---
 const WEATHER_DICTIONARY = {
   clear: {
     codes: [0],
     label: 'Sunny',
     mood: 'Joyful & Bouncy ✨',
     description: 'Perfect day for a cute picnic or sketching outside!',
-    icon: IconSun,
+    icon: Sun,
     theme: { bg: '#f0e6d2', accent: 'bg-yellow-300' },
     audio: 'https://www.soundboard.com/handler/DownLoadTrack.ashx?cliptitle=Forest+Nature+Birds&filename=24/241834-31514781-a7da-4e4b-9721-39589d3810f4.mp3', 
     effect: 'sun'
@@ -103,7 +39,7 @@ const WEATHER_DICTIONARY = {
     label: 'Cloudy',
     mood: 'Cozy & Calm 🍵',
     description: 'A gentle sky. Great time to doodle near the window.',
-    icon: IconCloud,
+    icon: Cloud,
     theme: { bg: '#e2e8f0', accent: 'bg-slate-300' },
     audio: 'https://assets.mixkit.co/active_storage/sfx/139/139-preview.mp3', 
     effect: 'cloud'
@@ -113,7 +49,7 @@ const WEATHER_DICTIONARY = {
     label: 'Foggy',
     mood: 'Mysterious & Thoughtful 🌫️',
     description: 'The world looks so soft and painted today.',
-    icon: IconCloud,
+    icon: Cloud,
     theme: { bg: '#d4d4d8', accent: 'bg-zinc-400' },
     audio: 'https://assets.mixkit.co/active_storage/sfx/139/139-preview.mp3',
     effect: 'cloud'
@@ -123,7 +59,7 @@ const WEATHER_DICTIONARY = {
     label: 'Rainy',
     mood: 'Sleepy & Snuggly 🌧️',
     description: 'Pitter patter! Time to wrap up in your softest blanket.',
-    icon: IconCloudRain,
+    icon: CloudRain,
     theme: { bg: '#dbeafe', accent: 'bg-blue-300' },
     audio: 'https://www.soundboard.com/handler/DownLoadTrack.ashx?cliptitle=Rain+Falling+on+Tent&filename=22/227588-4394017b-2325-4b08-9642-12711681283a.mp3',
     effect: 'rain'
@@ -133,7 +69,7 @@ const WEATHER_DICTIONARY = {
     label: 'Snowy',
     mood: 'Playful & Chilly ❄️',
     description: 'Brrr! Let\'s draw a tiny snowman!',
-    icon: IconSnowflake,
+    icon: Snowflake,
     theme: { bg: '#cffafe', accent: 'bg-cyan-300' },
     audio: 'https://assets.mixkit.co/active_storage/sfx/2141/2141-preview.mp3',
     effect: 'snow'
@@ -143,7 +79,7 @@ const WEATHER_DICTIONARY = {
     label: 'Stormy',
     mood: 'A little anxious! ⚡',
     description: 'Loud noises outside, but it\'s safe and warm in here.',
-    icon: IconCloudLightning,
+    icon: CloudLightning,
     theme: { bg: '#e9d5ff', accent: 'bg-purple-300' },
     audio: 'https://www.soundboard.com/handler/DownLoadTrack.ashx?cliptitle=Thunder+and+Rain&filename=22/227588-1f1f1d1f-2e3d-4c3e-8f9f-7e9f3b3b3b3b.mp3', 
     effect: 'storm'
@@ -226,18 +162,15 @@ export default function App() {
     document.getElementsByTagName('head')[0].appendChild(link);
   }, []);
 
-  // Audio Management - Fixed with smoother transitions and lower volume
+  // Audio Management
   useEffect(() => {
     if (isAudioEnabled && weatherData) {
       const state = getWeatherState(weatherData.weathercode);
-      
-      if (audioRef.current) {
-        audioRef.current.pause();
-      }
+      if (audioRef.current) audioRef.current.pause();
       
       const audio = new Audio(state.audio);
       audio.loop = true;
-      audio.volume = 0.3; // Lower volume for non-funny background vibe
+      audio.volume = 0.3;
       
       const playPromise = audio.play();
       if (playPromise !== undefined) {
@@ -251,9 +184,7 @@ export default function App() {
       }
     }
     return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-      }
+      if (audioRef.current) audioRef.current.pause();
     };
   }, [isAudioEnabled, weatherData]);
 
@@ -311,7 +242,7 @@ export default function App() {
   const dataState = weatherData ? getWeatherState(weatherData.weathercode) : WEATHER_DICTIONARY.clear;
   const currentTheme = dataState.theme;
   const currentMood = weatherData ? dataState.mood : 'Waking up...';
-  const CurrentIcon = weatherData ? dataState.icon : IconSun;
+  const CurrentIcon = weatherData ? dataState.icon : Sun;
   const currentDesc = weatherData ? dataState.description : 'Gathering the cutest weather data...';
   const currentTemp = weatherData ? `${Math.round(weatherData.temperature)}°C` : '';
 
@@ -333,7 +264,7 @@ export default function App() {
         {/* Top Bar */}
         <div className="flex justify-between items-center w-full mb-8 relative z-10">
           <div className="flex items-center gap-2 ink-text bg-white bg-opacity-70 px-3 py-1 border-2 border-slate-700 shadow-[2px_2px_0px_0px_#334155]" style={{ borderRadius: '255px 15px 225px 15px/15px 225px 15px 255px' }}>
-            <IconMapPin className="w-5 h-5" />
+            <MapPin size={20} />
             <span className="font-bold text-sm tracking-wide">{loading ? 'Locating...' : locationName}</span>
           </div>
           <div className="flex gap-2">
@@ -342,17 +273,17 @@ export default function App() {
               className={`p-2 paper-btn flex items-center justify-center transition-all ${isAudioEnabled ? 'bg-yellow-100 shadow-none translate-x-0.5 translate-y-0.5' : ''}`}
               title={isAudioEnabled ? "Mute Atmosphere" : "Play Atmosphere"}
             >
-              {isAudioEnabled ? <IconVolume2 className="w-5 h-5" /> : <IconVolumeX className="w-5 h-5" />}
+              {isAudioEnabled ? <Volume2 size={20} /> : <VolumeX size={20} />}
             </button>
             <button onClick={locateUser} className={`p-2 paper-btn flex items-center justify-center ${loading ? 'animate-spin' : ''}`}>
-              <IconRefreshCw className="w-5 h-5" />
+              <RefreshCw size={20} />
             </button>
           </div>
         </div>
 
         {/* Clock */}
         <div className="absolute top-20 left-6 ink-text rotate-[-4deg] opacity-80 z-20 flex items-center gap-1.5 bg-white bg-opacity-40 px-2 rounded-md">
-          <IconClock className="w-3.5 h-3.5" />
+          <Clock size={14} />
           <span className="text-lg font-bold tracking-tight">
             {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
           </span>
@@ -368,7 +299,7 @@ export default function App() {
         {/* Icon & Highlight */}
         <div className="relative w-32 h-32 mb-6 flex items-center justify-center">
           <div className={`absolute inset-0 ${currentTheme.accent} highlight-blob opacity-70 animate-float transition-colors duration-1000`}></div>
-          <CurrentIcon className="w-16 h-16 ink-text relative z-10" style={{ filter: 'drop-shadow(2px 2px 0px rgba(51,65,85,0.2))' }} />
+          <CurrentIcon size={64} className="ink-text relative z-10" style={{ filter: 'drop-shadow(2px 2px 0px rgba(51,65,85,0.2))' }} />
         </div>
 
         <div className="text-sm uppercase tracking-widest font-bold mb-1 ink-text opacity-70 border-b-2 border-slate-700 border-dashed pb-1">Current Mood</div>
@@ -383,27 +314,31 @@ export default function App() {
         
         <div className="flex flex-col items-center text-center">
           <div className="flex items-center gap-1.5 text-sm font-bold opacity-80">
-            <IconHeart className="w-3.5 h-3.5 fill-red-400 text-slate-700" /> 
+            <Heart size={14} className="fill-red-400 text-slate-700" /> 
             <span>A labor of love from Cutesense Studios</span>
           </div>
           
           <div className="flex items-center gap-1.5 text-xs font-bold opacity-60 mt-0.5">
-            <IconSparkles className="w-3 h-3 text-yellow-600 fill-yellow-200" />
+            <Sparkles size={12} className="text-yellow-600 fill-yellow-200" />
             <span>Woven with Gemini’s digital magic</span>
           </div>
         </div>
 
         <div className="flex items-center gap-1.5 opacity-40 mt-1 hover:opacity-100 transition-opacity cursor-help text-[9px] uppercase tracking-[0.2em]">
-          <IconScale className="w-3 h-3" />
+          <Scale size={12} />
           <span className="underline decoration-dotted underline-offset-4">GNU AGPL v3.0</span>
-          <span className="mx-1">|</span>
-          <span className="underline decoration-dotted underline-offset-4">Atmosphere CC-Zero</span>
         </div>
       </footer>
 
       {/* Custom Styles */}
       <style dangerouslySetInnerHTML={{__html: `
-        @import url('https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap');
+        @font-face {
+          font-family: 'Kalam';
+          src: url('/fonts/kalam-v18-latin-regular.woff2') format('woff2');
+          font-weight: 400;
+          font-style: normal;
+        }
+        
         .font-kalam { font-family: 'Kalam', cursive; }
         .ink-text { color: #334155; }
         
