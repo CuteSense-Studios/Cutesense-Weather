@@ -61,6 +61,12 @@ const IconSparkles = ({ className }) => (
   </svg>
 );
 
+const IconClock = ({ className }) => (
+  <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+  </svg>
+);
+
 // --- Weather Logic ---
 const WEATHER_DICTIONARY = {
   clear: {
@@ -124,6 +130,13 @@ export default function App() {
   const [weatherData, setWeatherData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [locationName, setLocationName] = useState('Detecting location...');
+  const [time, setTime] = useState(new Date());
+
+  // Clock Effect
+  useEffect(() => {
+    const timer = setInterval(() => setTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   const fetchWeather = async (lat, lon) => {
     setLoading(true);
@@ -200,6 +213,14 @@ export default function App() {
           </button>
         </div>
 
+        {/* Clock - Top Left Scrap */}
+        <div className="absolute top-20 left-6 ink-text rotate-[-4deg] opacity-80 z-20 flex items-center gap-1.5 bg-white bg-opacity-40 px-2 rounded-md">
+          <IconClock className="w-3.5 h-3.5" />
+          <span className="text-lg font-bold tracking-tight">
+            {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+          </span>
+        </div>
+
         {/* Temperature scribbled */}
         {!loading && (
           <div className="absolute top-20 right-8 font-bold text-4xl ink-text rotate-3 opacity-90 z-20" style={{ filter: 'drop-shadow(1px 1px 0px rgba(51,65,85,0.3))' }}>
@@ -214,30 +235,30 @@ export default function App() {
         </div>
 
         <div className="text-sm uppercase tracking-widest font-bold mb-1 ink-text opacity-70 border-b-2 border-slate-700 border-dashed pb-1">Current Mood</div>
-        <h1 className="text-4xl font-bold mb-4 ink-text mt-2">{currentMood}</h1>
+        <h1 className="text-4xl font-bold mb-4 ink-text mt-2 leading-tight">{currentMood}</h1>
         <p className="text-xl px-4 leading-relaxed ink-text font-medium opacity-90">{currentDesc}</p>
         <div className="scribble-divider mt-8 mb-2"></div>
       </div>
 
-      {/* Redesigned Footer */}
-      <footer className="mt-12 flex flex-col items-center gap-4 relative z-10 max-w-sm w-full">
+      {/* Redesigned Footer - Small but noticeable Sticky Note */}
+      <footer className="mt-8 flex flex-col items-center gap-3 relative z-10 max-w-lg w-full">
         
-        {/* Credits Sticker */}
-        <div className="bg-white border-2 border-slate-700 p-4 shadow-[4px_4px_0px_0px_#334155] -rotate-1 relative sticker-effect" style={{ borderRadius: '5px 45px 5px 45px/45px 5px 45px 5px' }}>
-          <div className="flex items-center gap-2 ink-text font-bold text-lg mb-1">
-            <IconHeart className="w-5 h-5 fill-red-400 text-slate-700" /> 
-            <span>Made with love in Cutesense Studios</span>
-          </div>
-          <div className="flex items-center gap-2 ink-text opacity-70 text-sm font-bold pl-7">
-            <IconSparkles className="w-4 h-4" />
-            <span>Generated with Gemini</span>
+        {/* Compact Sticky Note */}
+        <div className="bg-[#fff9c4] border-2 border-slate-700 px-5 py-3 shadow-[6px_6px_12px_-5px_rgba(0,0,0,0.3)] rotate-1 relative sticker-effect" style={{ borderRadius: '2px 2px 30px 2px/2px 2px 8px 2px' }}>
+          <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 ink-text font-bold text-base text-center leading-tight">
+            <IconHeart className="w-4 h-4 fill-red-400 text-slate-700 inline" /> 
+            <span>Hand-crafted with love at Cutesense Studios,</span>
+            <span className="flex items-center gap-1.5">
+              <IconSparkles className="w-4 h-4 text-yellow-600 fill-yellow-200" />
+              sparked by Gemini’s magic
+            </span>
           </div>
         </div>
 
         {/* License Link Style */}
-        <div className="flex items-center gap-2 ink-text opacity-60 hover:opacity-100 transition-opacity cursor-help">
-          <IconScale className="w-4 h-4" />
-          <span className="text-xs font-bold underline decoration-dashed underline-offset-4">Licensed under GNU AGPL v3.0</span>
+        <div className="flex items-center gap-2 ink-text opacity-50 hover:opacity-100 transition-opacity cursor-help">
+          <IconScale className="w-3.5 h-3.5" />
+          <span className="text-[10px] font-bold uppercase tracking-wider underline decoration-dashed underline-offset-4">GNU AGPL v3.0</span>
         </div>
       </footer>
 
@@ -274,10 +295,10 @@ export default function App() {
           background-image: radial-gradient(circle, #334155 2px, transparent 2px);
           background-size: 12px 12px; background-repeat: repeat-x; opacity: 0.5;
         }
-        /* Sticky tape effect */
         .sticker-effect::before {
-          content: ''; position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
-          width: 60px; height: 25px; background: rgba(255,255,255,0.4); border: 1px solid rgba(0,0,0,0.05);
+          content: ''; position: absolute; top: -10px; left: 50%; transform: translateX(-50%) rotate(-2deg);
+          width: 70px; height: 25px; background: rgba(255,255,255,0.3); border: 1px solid rgba(0,0,0,0.05);
+          box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
       `}} />
     </div>
