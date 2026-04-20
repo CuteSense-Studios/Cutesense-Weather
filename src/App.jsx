@@ -41,7 +41,7 @@ const WEATHER_DICTIONARY = {
     description: 'A gentle sky. Great time to doodle near the window.',
     icon: Cloud,
     theme: { bg: '#e2e8f0', accent: 'bg-slate-300' },
-    audio: 'https://assets.mixkit.co/active_storage/sfx/139/139-preview.mp3', 
+    audio: ' ', 
     effect: 'cloud'
   },
   fog: {
@@ -51,7 +51,7 @@ const WEATHER_DICTIONARY = {
     description: 'The world looks so soft and painted today.',
     icon: Cloud,
     theme: { bg: '#d4d4d8', accent: 'bg-zinc-400' },
-    audio: 'https://assets.mixkit.co/active_storage/sfx/139/139-preview.mp3',
+    audio: ' ',
     effect: 'cloud'
   },
   rain: {
@@ -61,7 +61,7 @@ const WEATHER_DICTIONARY = {
     description: 'Pitter patter! Time to wrap up in your softest blanket.',
     icon: CloudRain,
     theme: { bg: '#dbeafe', accent: 'bg-blue-300' },
-    audio: 'https://www.soundboard.com/handler/DownLoadTrack.ashx?cliptitle=Rain+Falling+on+Tent&filename=22/227588-4394017b-2325-4b08-9642-12711681283a.mp3',
+    audio: ' ',
     effect: 'rain'
   },
   snow: {
@@ -71,7 +71,7 @@ const WEATHER_DICTIONARY = {
     description: 'Brrr! Let\'s draw a tiny snowman!',
     icon: Snowflake,
     theme: { bg: '#cffafe', accent: 'bg-cyan-300' },
-    audio: 'https://assets.mixkit.co/active_storage/sfx/2141/2141-preview.mp3',
+    audio: ' ',
     effect: 'snow'
   },
   storm: {
@@ -81,7 +81,7 @@ const WEATHER_DICTIONARY = {
     description: 'Loud noises outside, but it\'s safe and warm in here.',
     icon: CloudLightning,
     theme: { bg: '#e9d5ff', accent: 'bg-purple-300' },
-    audio: 'https://www.soundboard.com/handler/DownLoadTrack.ashx?cliptitle=Thunder+and+Rain&filename=22/227588-1f1f1d1f-2e3d-4c3e-8f9f-7e9f3b3b3b3b.mp3', 
+    audio: ' ', 
     effect: 'storm'
   }
 };
