@@ -31,3 +31,8 @@ Check it out here: [https://Shubham-hahh.github.io/cutesense-weather/](https://S
 This project is licensed under the **GNU Affero General Public License v3.0 (AGPL-3.0)**. 
 
 > "Woven with heart and code for a cozier world."
+
+---
+
+*Co-authored by Gemini and a human.*
+
