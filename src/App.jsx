@@ -13,7 +13,7 @@ import {
   Clock 
 } from 'lucide-react';
 
-// --- Weather Dictionary (Audio Removed) ---
+// --- Weather Dictionary (Effects updated for realism) ---
 const WEATHER_DICTIONARY = {
   clear: {
     codes: [0],
@@ -78,20 +78,21 @@ const getWeatherState = (code) => {
   return WEATHER_DICTIONARY.clear;
 };
 
-// --- Enhanced Atmospheric Effects ---
-const RainDrops = () => {
-  const drops = Array.from({ length: 60 }); // Increased density
+// --- New Real Paper Weather Effects ---
+
+const RainDropsPaper = () => {
+  const drops = Array.from({ length: 120 }); // Massively increased density
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-40">
+    <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-30">
       {drops.map((_, i) => (
         <div 
           key={i} 
-          className="absolute bg-slate-500 rounded-full animate-rain-ink"
+          className="absolute bg-slate-500 rounded-full animate-rain-paper"
           style={{
             left: `${Math.random() * 100}%`,
-            width: '1.5px',
-            height: `${10 + Math.random() * 20}px`,
-            animationDuration: `${0.4 + Math.random() * 0.4}s`,
+            width: `${Math.random() > 0.8 ? 2 : 1.5}px`, // Slight variation
+            height: `${8 + Math.random() * 25}px`,
+            animationDuration: `${0.3 + Math.random() * 0.3}s`,
             animationDelay: `${Math.random() * 2}s`
           }}
         />
@@ -100,38 +101,77 @@ const RainDrops = () => {
   );
 };
 
-const SnowFlakes = () => {
-  const flakes = Array.from({ length: 50 }); // Increased density
+const SnowFlakesPaper = () => {
+  const flakes = Array.from({ length: 90 }); // Significantly increased density
+  const colors = ['#ffffff', '#f1f5f9', '#e2e8f0'];
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-60">
-      {flakes.map((_, i) => (
-        <div 
-          key={i} 
-          className="absolute bg-white rounded-full animate-snow-drift border border-slate-200 shadow-sm"
-          style={{
-            left: `${Math.random() * 100}%`,
-            width: `${5 + Math.random() * 8}px`,
-            height: `${5 + Math.random() * 8}px`,
-            animationDuration: `${4 + Math.random() * 6}s`,
-            animationDelay: `${Math.random() * 5}s`
-          }}
-        />
-      ))}
+    <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-70">
+      {flakes.map((_, i) => {
+        const size = 5 + Math.random() * 12; // Wider size range
+        const isCircle = Math.random() > 0.3;
+        return (
+          <div 
+            key={i} 
+            className="absolute animate-snow-drift border border-slate-200/50"
+            style={{
+              backgroundColor: colors[Math.floor(Math.random() * colors.length)],
+              left: `${Math.random() * 100}%`,
+              width: `${size}px`,
+              height: `${size}px`,
+              borderRadius: isCircle ? '50%' : '2px', // Some dots, some tiny square paper cuts
+              boxShadow: '1px 1px 2px rgba(51, 65, 85, 0.1)',
+              animationDuration: `${3 + Math.random() * 6}s`,
+              animationDelay: `${Math.random() * 5}s`
+            }}
+          />
+        );
+      })}
     </div>
   );
 };
 
-const FogMist = () => (
-  <div className="absolute inset-0 pointer-events-none opacity-20">
-    <div className="absolute inset-0 bg-gradient-to-t from-slate-300/50 to-transparent animate-pulse" style={{ animationDuration: '8s' }} />
-    <div className="absolute top-1/4 -left-20 w-64 h-64 bg-slate-200 rounded-full blur-3xl animate-float" />
-    <div className="absolute bottom-1/4 -right-20 w-80 h-80 bg-slate-100 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }} />
+const FogMistPaper = () => (
+  <div className="absolute inset-0 pointer-events-none opacity-25">
+    {/* Multiple layered, irregular paper shapes floating in fog */}
+    {[
+      { delay: '0s', size: '64', color: 'slate-100', top: '15%', left: '-25%', rotate: '15deg' },
+      { delay: '2s', size: '80', color: 'slate-200', bottom: '10%', right: '-30%', rotate: '-10deg' },
+      { delay: '4s', size: '56', color: 'slate-100', top: '50%', left: '-15%', rotate: '-5deg' },
+      { delay: '6s', size: '72', color: 'slate-200', bottom: '45%', right: '-20%', rotate: '12deg' },
+    ].map((m, i) => (
+      <div 
+        key={i} 
+        className={`absolute w-${m.size} h-${m.size} bg-${m.color}/80 border border-slate-300 blur-2xl animate-paper-float`}
+        style={{
+          top: m.top, bottom: m.bottom, left: m.left, right: m.right,
+          borderRadius: '50%',
+          animationDelay: m.delay,
+          transform: `rotate(${m.rotate})`
+        }} 
+      />
+    ))}
   </div>
 );
 
-const SunBeams = () => (
-  <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-20">
-    <div className="absolute top-[-10%] left-[-10%] w-[120%] h-[120%] bg-[radial-gradient(circle,rgba(253,224,71,0.3)_0%,transparent_70%)] animate-pulse" />
+const SunPaper = () => (
+  <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-15">
+    {/* Background Sun Layer */}
+    <div className="absolute top-[-10%] left-[-10%] w-[120%] h-[120%] bg-[radial-gradient(circle,rgba(253,224,71,0.25)_0%,transparent_70%)] animate-pulse" style={{ animationDuration: '6s' }} />
+    {/* Layered, stylized paper-cut sun in the background */}
+    <div className="absolute top-10 right-10 w-48 h-48 opacity-60 z-0">
+        <div className="absolute inset-0 bg-yellow-400 rotate-[-10deg] paper-blob scale-[1.05]" style={{ borderRadius: '40% 60% 70% 30% / 40% 50% 60% 50%'}}></div>
+        <div className="absolute inset-2 bg-yellow-300 rotate-[8deg] paper-blob" style={{ borderRadius: '60% 40% 30% 70% / 50% 50% 50% 50%'}}></div>
+    </div>
+  </div>
+);
+
+// --- Global Real Desk Scrapbook Objects ---
+const DeskScrapbookObjects = () => (
+  <div className="absolute inset-0 pointer-events-none opacity-[0.05] z-0">
+    {/* Stylized Desk Items */}
+    <div className="absolute top-[30%] -right-16 w-32 h-32 border-[10px] border-slate-700/60 rotate-[-15deg]" style={{ borderRadius: '50%'}}></div> {/* Coffee Ring */}
+    <div className="absolute bottom-[20%] -left-10 w-40 h-8 bg-slate-400/80 border border-slate-700/80 rotate-[-4deg]"></div> {/* Tiny Pencil */}
+    <div className="absolute bottom-[40%] -right-12 w-20 h-16 border-2 border-slate-700/80 rotate-[10deg]"></div> {/* Tiny Paperclip */}
   </div>
 );
 
@@ -150,6 +190,12 @@ export default function App() {
   // Favicon and Title Effect
   useEffect(() => {
     document.title = "Cutesense Weather";
+    const link = document.querySelector("link[rel~='icon']") || document.createElement('link');
+    link.type = 'image/svg+xml';
+    link.rel = 'icon';
+    const svgString = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#334155" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>`;
+    link.href = `data:image/svg+xml;base64,${btoa(svgString)}`;
+    document.getElementsByTagName('head')[0].appendChild(link);
   }, []);
 
   const fetchWeather = async (lat, lon) => {
@@ -215,22 +261,33 @@ export default function App() {
       className="min-h-screen flex flex-col items-center justify-center p-6 transition-colors duration-1000 font-kalam relative overflow-hidden"
       style={{ backgroundColor: currentTheme.bg }}
     >
-      {/* Visual Weather Effects Background Layers */}
-      {dataState.effect === 'rain' || dataState.effect === 'storm' ? <RainDrops /> : null}
-      {dataState.effect === 'snow' ? <SnowFlakes /> : null}
-      {dataState.effect === 'fog' ? <FogMist /> : null}
-      {dataState.effect === 'sun' ? <SunBeams /> : null}
+      {/* Background Layers */}
+      {dataState.effect === 'rain' || dataState.effect === 'storm' ? <RainDropsPaper /> : null}
+      {dataState.effect === 'snow' ? <SnowFlakesPaper /> : null}
+      {dataState.effect === 'fog' ? <FogMistPaper /> : null}
+      {dataState.effect === 'sun' ? <SunPaper /> : null}
+      <DeskScrapbookObjects />
 
-      {/* Textured Paper Overlay - Increased Opacity for papery vibe */}
-      <div className="absolute inset-0 pointer-events-none opacity-[0.08] bg-repeat mix-blend-multiply" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/p6.png")' }}></div>
-      <div className="absolute inset-0 pointer-events-none opacity-[0.05] bg-repeat" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/cardboard-flat.png")' }}></div>
+      {/* Real Papery Textures */}
+      <div className="absolute inset-0 pointer-events-none opacity-[0.1] bg-repeat mix-blend-multiply" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/p6.png")' }}></div>
+      <div className="absolute inset-0 pointer-events-none opacity-[0.08] bg-repeat" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/cardboard-flat.png")' }}></div>
 
-      {/* Main Handwritten Paper Card */}
+      {/* Main Card */}
       <div className="max-w-md w-full paper-card relative p-10 flex flex-col items-center text-center z-10 animate-gentle-tilt">
         
-        {/* Washi Tape Effect */}
+        {/* Decorative Photo Corners */}
+        <div className="absolute top-0 left-0 w-8 h-8 border-t-[5px] border-l-[5px] border-slate-700 opacity-80" style={{ borderRadius: '5px 0 20px 0'}}></div>
+        <div className="absolute top-0 right-0 w-8 h-8 border-t-[5px] border-r-[5px] border-slate-700 opacity-80" style={{ borderRadius: '0 5px 0 20px'}}></div>
+        <div className="absolute bottom-0 left-0 w-8 h-8 border-b-[5px] border-l-[5px] border-slate-700 opacity-80" style={{ borderRadius: '0 20px 5px 0'}}></div>
+        <div className="absolute bottom-0 right-0 w-8 h-8 border-b-[5px] border-r-[5px] border-slate-700 opacity-80" style={{ borderRadius: '20px 0 0 5px'}}></div>
+
+        {/* Ink Stamp */}
+        <div className="absolute bottom-6 right-6 opacity-30 z-20 border-4 border-double border-red-700/80 ink-stamp rotate-[15deg] p-1.5 font-bold tracking-widest uppercase text-red-900/90 text-xs"> 
+            Cozy Approved
+        </div>
+
+        {/* Washi Tape - Text Removed per user request */}
         <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-32 h-10 bg-blue-100/60 border-x-2 border-dashed border-blue-300/50 rotate-[-1deg] z-30 mix-blend-multiply flex items-center justify-center overflow-hidden">
-             <div className="opacity-20 text-[8px] font-bold text-blue-900 uppercase tracking-widest whitespace-nowrap"> CUTESENSE • CUTESENSE • CUTESENSE </div>
         </div>
 
         {/* Top Bar */}
@@ -252,14 +309,14 @@ export default function App() {
           </span>
         </div>
 
-        {/* Temperature scribbled */}
+        {/* Temperature */}
         {!loading && (
           <div className="absolute top-24 right-10 font-bold text-5xl ink-text rotate-6 opacity-90 z-20 ink-bleed" style={{ filter: 'drop-shadow(1px 1px 0px rgba(51,65,85,0.2))' }}>
             {currentTemp}
           </div>
         )}
 
-        {/* Icon & Highlight */}
+        {/* Icon */}
         <div className="relative w-40 h-40 mb-8 flex items-center justify-center">
           <div className={`absolute inset-0 ${currentTheme.accent} highlight-blob opacity-60 animate-float transition-colors duration-1000`}></div>
           <CurrentIcon size={80} className="ink-text relative z-10" style={{ filter: 'drop-shadow(3px 3px 0px rgba(51,65,85,0.15))' }} />
@@ -272,22 +329,19 @@ export default function App() {
         <div className="scribble-divider mt-10 mb-2"></div>
       </div>
 
-      {/* Refined Separated Footer */}
+      {/* Footer */}
       <footer className="mt-10 flex flex-col items-center gap-2 relative z-10 w-full ink-text">
         <div className="text-xl font-bold opacity-30 tracking-[1em]">***</div>
-        
         <div className="flex flex-col items-center text-center">
           <div className="flex items-center gap-1.5 text-sm font-bold opacity-70">
             <Heart size={14} className="fill-red-400 text-slate-700" /> 
             <span>Hand-sketched by Cutesense Studios</span>
           </div>
-          
           <div className="flex items-center gap-1.5 text-xs font-bold opacity-50 mt-1">
             <Sparkles size={12} className="text-yellow-600" />
             <span>Refined with Gemini's creative spark</span>
           </div>
         </div>
-
         <div className="mt-4 opacity-30 text-[10px] uppercase tracking-widest flex items-center gap-4">
             <span className="border border-slate-700 px-2 py-0.5 rounded">Issue #2026</span>
             <span>•</span>
@@ -306,20 +360,21 @@ export default function App() {
         
         .font-kalam { font-family: 'Kalam', cursive; }
         .ink-text { color: #2d3748; }
-        
-        /* Subtle ink bleed effect for larger text */
-        .ink-bleed {
-            text-shadow: 0.5px 0.5px 1px rgba(45, 55, 72, 0.3);
+        .ink-bleed { text-shadow: 0.5px 0.5px 1px rgba(45, 55, 72, 0.3); }
+
+        .ink-stamp { 
+            border-radius: 4px 10px 4px 10px / 10px 4px 10px 4px;
+            box-shadow: 1px 1px 1px rgba(127, 29, 29, 0.4);
+            filter: blur(0.2px) contrast(1.2);
         }
 
         .paper-card {
           background-color: #fffefc;
           border: 3px solid #334155;
           border-radius: 1% 99% 2% 98% / 99% 2% 98% 1%;
-          box-shadow: 12px 12px 0px 0px rgba(51, 65, 85, 0.1), 
-                      8px 8px 0px 0px rgba(51, 65, 85, 0.9);
+          box-shadow: 12px 12px 0px 0px rgba(51, 65, 85, 0.1), 8px 8px 0px 0px rgba(51, 65, 85, 0.9);
           background-image: 
-            repeating-linear-gradient(transparent, transparent 31px, #e2e8f0 31px, #e2e8f0 32px),
+            repeating-linear-gradient(transparent, transparent 31px, rgba(226, 232, 240, 0.5) 31px, rgba(226, 232, 240, 0.5) 32px),
             linear-gradient(90deg, #f1f5f9 1px, transparent 1px);
           background-size: 100% 32px, 40px 100%;
           background-position: 0 1.5rem, 2rem 0;
@@ -337,7 +392,7 @@ export default function App() {
         .paper-btn:hover { transform: translate(-1px, -1px); box-shadow: 5px 5px 0px 0px #334155; }
         .paper-btn:active { transform: translate(4px, 4px); box-shadow: 0px 0px 0px 0px #334155; }
         
-        .highlight-blob { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; mix-blend-mode: multiply; }
+        .highlight-blob, .paper-blob { mix-blend-mode: multiply; filter: drop-shadow(1px 1px 1px rgba(51, 65, 85, 0.1)); }
         
         @keyframes float-slow {
           0%, 100% { transform: translateY(-5px) rotate(-1deg) scale(1); }
@@ -345,18 +400,25 @@ export default function App() {
         }
         .animate-float { animation: float-slow 5s ease-in-out infinite; }
 
+        @keyframes paper-float {
+            0%, 100% { transform: translate(0,0) rotate(-1deg); }
+            33% { transform: translate(10px, -5px) rotate(1deg); }
+            66% { transform: translate(-5px, 10px) rotate(-0.5deg); }
+        }
+        .animate-paper-float { animation: paper-float 15s ease-in-out infinite; }
+
         @keyframes gentle-tilt {
             0%, 100% { transform: rotate(-0.5deg); }
             50% { transform: rotate(0.5deg); }
         }
         .animate-gentle-tilt { animation: gentle-tilt 10s ease-in-out infinite; }
 
-        @keyframes rain-ink {
+        @keyframes rain-paper {
           0% { transform: translateY(-110vh) skewX(-10deg); opacity: 0; }
           20% { opacity: 0.6; }
           100% { transform: translateY(110vh) skewX(-10deg); opacity: 0; }
         }
-        .animate-rain-ink { animation: rain-ink linear infinite; }
+        .animate-rain-paper { animation: rain-paper linear infinite; }
 
         @keyframes snow-drift {
           0% { transform: translateY(-10vh) translateX(0) rotate(0); opacity: 0; }
