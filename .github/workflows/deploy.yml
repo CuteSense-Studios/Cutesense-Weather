@@ -3,10 +3,10 @@ name: Build and Deploy Cutesense Weather
 on:
   push:
     branches:
-      - main  # This triggers the build whenever you push to main
+      - main
 
 permissions:
-  contents: write  # Necessary to push the build to the gh-pages branch
+  contents: write
 
 jobs:
   build-and-deploy:
@@ -14,12 +14,12 @@ jobs:
 
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6 # Updated from v4
 
       - name: Setup Node.js ⚙️
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6 # Updated from v4
         with:
-          node-version: 20
+          node-version: 24 # Updated to Node 24 for the runner
           cache: 'npm'
 
       - name: Install and Build 🔧
@@ -30,5 +30,5 @@ jobs:
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: dist  # Vite builds into 'dist'
-          branch: gh-pages  # The branch that will host the live site
+          folder: dist
+          branch: gh-pages
