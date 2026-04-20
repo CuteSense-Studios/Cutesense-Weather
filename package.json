@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "homepage": "https://cutesense-studios.github.io/cutesense-weather/",
+  "homepage": "https://cutesense-studios.github.io/Cutesense-Weather/",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
