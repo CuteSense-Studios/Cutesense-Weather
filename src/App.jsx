@@ -1,11 +1,4 @@
-/*
- * Cute Weather & Mood Indicator
- * Licensed under GNU Affero General Public License v3.0
- * Hand-crafted with love at Cutesense Studios
- * Updated to use local assets and lucide-react
- */
-
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Sun, 
   Cloud, 
@@ -17,12 +10,10 @@ import {
   Heart, 
   Scale, 
   Sparkles, 
-  Clock, 
-  Volume2, 
-  VolumeX 
+  Clock 
 } from 'lucide-react';
 
-// --- Weather Dictionary using Lucide Components ---
+// --- Weather Dictionary (Audio Removed) ---
 const WEATHER_DICTIONARY = {
   clear: {
     codes: [0],
@@ -30,8 +21,7 @@ const WEATHER_DICTIONARY = {
     mood: 'Joyful & Bouncy ✨',
     description: 'Perfect day for a cute picnic or sketching outside!',
     icon: Sun,
-    theme: { bg: '#f0e6d2', accent: 'bg-yellow-300' },
-    audio: 'https://www.soundboard.com/handler/DownLoadTrack.ashx?cliptitle=Forest+Nature+Birds&filename=24/241834-31514781-a7da-4e4b-9721-39589d3810f4.mp3', 
+    theme: { bg: '#fdf4ff', accent: 'bg-yellow-200' },
     effect: 'sun'
   },
   cloudy: {
@@ -40,9 +30,8 @@ const WEATHER_DICTIONARY = {
     mood: 'Cozy & Calm 🍵',
     description: 'A gentle sky. Great time to doodle near the window.',
     icon: Cloud,
-    theme: { bg: '#e2e8f0', accent: 'bg-slate-300' },
-    audio: ' ', 
-    effect: 'cloud'
+    theme: { bg: '#f1f5f9', accent: 'bg-slate-200' },
+    effect: 'fog'
   },
   fog: {
     codes: [45, 48],
@@ -50,9 +39,8 @@ const WEATHER_DICTIONARY = {
     mood: 'Mysterious & Thoughtful 🌫️',
     description: 'The world looks so soft and painted today.',
     icon: Cloud,
-    theme: { bg: '#d4d4d8', accent: 'bg-zinc-400' },
-    audio: ' ',
-    effect: 'cloud'
+    theme: { bg: '#fafafa', accent: 'bg-zinc-300' },
+    effect: 'fog'
   },
   rain: {
     codes: [51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82],
@@ -60,8 +48,7 @@ const WEATHER_DICTIONARY = {
     mood: 'Sleepy & Snuggly 🌧️',
     description: 'Pitter patter! Time to wrap up in your softest blanket.',
     icon: CloudRain,
-    theme: { bg: '#dbeafe', accent: 'bg-blue-300' },
-    audio: ' ',
+    theme: { bg: '#f0f9ff', accent: 'bg-blue-200' },
     effect: 'rain'
   },
   snow: {
@@ -70,8 +57,7 @@ const WEATHER_DICTIONARY = {
     mood: 'Playful & Chilly ❄️',
     description: 'Brrr! Let\'s draw a tiny snowman!',
     icon: Snowflake,
-    theme: { bg: '#cffafe', accent: 'bg-cyan-300' },
-    audio: ' ',
+    theme: { bg: '#f8fafc', accent: 'bg-cyan-100' },
     effect: 'snow'
   },
   storm: {
@@ -80,8 +66,7 @@ const WEATHER_DICTIONARY = {
     mood: 'A little anxious! ⚡',
     description: 'Loud noises outside, but it\'s safe and warm in here.',
     icon: CloudLightning,
-    theme: { bg: '#e9d5ff', accent: 'bg-purple-300' },
-    audio: ' ', 
+    theme: { bg: '#f5f3ff', accent: 'bg-purple-200' },
     effect: 'storm'
   }
 };
@@ -93,41 +78,20 @@ const getWeatherState = (code) => {
   return WEATHER_DICTIONARY.clear;
 };
 
-// --- Atmosphere Effects Components ---
+// --- Enhanced Atmospheric Effects ---
 const RainDrops = () => {
-  const drops = Array.from({ length: 20 });
+  const drops = Array.from({ length: 60 }); // Increased density
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-30">
+    <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-40">
       {drops.map((_, i) => (
         <div 
           key={i} 
-          className="absolute bg-blue-900 rounded-full animate-rain-ink"
+          className="absolute bg-slate-500 rounded-full animate-rain-ink"
           style={{
             left: `${Math.random() * 100}%`,
-            width: '2px',
-            height: '15px',
-            animationDuration: `${0.5 + Math.random()}s`,
-            animationDelay: `${Math.random()}s`
-          }}
-        />
-      ))}
-    </div>
-  );
-};
-
-const SnowFlakes = () => {
-  const flakes = Array.from({ length: 15 });
-  return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-40">
-      {flakes.map((_, i) => (
-        <div 
-          key={i} 
-          className="absolute bg-white rounded-full animate-snow-drift border border-slate-300"
-          style={{
-            left: `${Math.random() * 100}%`,
-            width: `${4 + Math.random() * 6}px`,
-            height: `${4 + Math.random() * 6}px`,
-            animationDuration: `${3 + Math.random() * 4}s`,
+            width: '1.5px',
+            height: `${10 + Math.random() * 20}px`,
+            animationDuration: `${0.4 + Math.random() * 0.4}s`,
             animationDelay: `${Math.random() * 2}s`
           }}
         />
@@ -136,15 +100,47 @@ const SnowFlakes = () => {
   );
 };
 
+const SnowFlakes = () => {
+  const flakes = Array.from({ length: 50 }); // Increased density
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-60">
+      {flakes.map((_, i) => (
+        <div 
+          key={i} 
+          className="absolute bg-white rounded-full animate-snow-drift border border-slate-200 shadow-sm"
+          style={{
+            left: `${Math.random() * 100}%`,
+            width: `${5 + Math.random() * 8}px`,
+            height: `${5 + Math.random() * 8}px`,
+            animationDuration: `${4 + Math.random() * 6}s`,
+            animationDelay: `${Math.random() * 5}s`
+          }}
+        />
+      ))}
+    </div>
+  );
+};
+
+const FogMist = () => (
+  <div className="absolute inset-0 pointer-events-none opacity-20">
+    <div className="absolute inset-0 bg-gradient-to-t from-slate-300/50 to-transparent animate-pulse" style={{ animationDuration: '8s' }} />
+    <div className="absolute top-1/4 -left-20 w-64 h-64 bg-slate-200 rounded-full blur-3xl animate-float" />
+    <div className="absolute bottom-1/4 -right-20 w-80 h-80 bg-slate-100 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }} />
+  </div>
+);
+
+const SunBeams = () => (
+  <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-20">
+    <div className="absolute top-[-10%] left-[-10%] w-[120%] h-[120%] bg-[radial-gradient(circle,rgba(253,224,71,0.3)_0%,transparent_70%)] animate-pulse" />
+  </div>
+);
+
 export default function App() {
   const [weatherData, setWeatherData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [locationName, setLocationName] = useState('Detecting location...');
   const [time, setTime] = useState(new Date());
-  const [isAudioEnabled, setIsAudioEnabled] = useState(false);
   
-  const audioRef = useRef(null);
-
   // Clock Effect
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000);
@@ -154,39 +150,7 @@ export default function App() {
   // Favicon and Title Effect
   useEffect(() => {
     document.title = "Cutesense Weather";
-    const link = document.querySelector("link[rel~='icon']") || document.createElement('link');
-    link.type = 'image/svg+xml';
-    link.rel = 'icon';
-    const svgString = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#334155" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>`;
-    link.href = `data:image/svg+xml;base64,${btoa(svgString)}`;
-    document.getElementsByTagName('head')[0].appendChild(link);
   }, []);
-
-  // Audio Management
-  useEffect(() => {
-    if (isAudioEnabled && weatherData) {
-      const state = getWeatherState(weatherData.weathercode);
-      if (audioRef.current) audioRef.current.pause();
-      
-      const audio = new Audio(state.audio);
-      audio.loop = true;
-      audio.volume = 0.3;
-      
-      const playPromise = audio.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(e => console.log("Interaction required for audio."));
-      }
-      audioRef.current = audio;
-    } else {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
-      }
-    }
-    return () => {
-      if (audioRef.current) audioRef.current.pause();
-    };
-  }, [isAudioEnabled, weatherData]);
 
   const fetchWeather = async (lat, lon) => {
     setLoading(true);
@@ -254,35 +218,34 @@ export default function App() {
       {/* Visual Weather Effects Background Layers */}
       {dataState.effect === 'rain' || dataState.effect === 'storm' ? <RainDrops /> : null}
       {dataState.effect === 'snow' ? <SnowFlakes /> : null}
+      {dataState.effect === 'fog' ? <FogMist /> : null}
+      {dataState.effect === 'sun' ? <SunBeams /> : null}
 
-      {/* Textured Paper Overlay */}
-      <div className="absolute inset-0 pointer-events-none opacity-[0.04] bg-repeat mix-blend-multiply" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/p6.png")' }}></div>
+      {/* Textured Paper Overlay - Increased Opacity for papery vibe */}
+      <div className="absolute inset-0 pointer-events-none opacity-[0.08] bg-repeat mix-blend-multiply" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/p6.png")' }}></div>
+      <div className="absolute inset-0 pointer-events-none opacity-[0.05] bg-repeat" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/cardboard-flat.png")' }}></div>
 
       {/* Main Handwritten Paper Card */}
-      <div className="max-w-md w-full paper-card relative p-8 flex flex-col items-center text-center z-10">
+      <div className="max-w-md w-full paper-card relative p-10 flex flex-col items-center text-center z-10 animate-gentle-tilt">
         
+        {/* Washi Tape Effect */}
+        <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-32 h-10 bg-blue-100/60 border-x-2 border-dashed border-blue-300/50 rotate-[-1deg] z-30 mix-blend-multiply flex items-center justify-center overflow-hidden">
+             <div className="opacity-20 text-[8px] font-bold text-blue-900 uppercase tracking-widest whitespace-nowrap"> CUTESENSE • CUTESENSE • CUTESENSE </div>
+        </div>
+
         {/* Top Bar */}
-        <div className="flex justify-between items-center w-full mb-8 relative z-10">
-          <div className="flex items-center gap-2 ink-text bg-white bg-opacity-70 px-3 py-1 border-2 border-slate-700 shadow-[2px_2px_0px_0px_#334155]" style={{ borderRadius: '255px 15px 225px 15px/15px 225px 15px 255px' }}>
-            <MapPin size={20} />
+        <div className="flex justify-between items-center w-full mb-10 relative z-10">
+          <div className="flex items-center gap-2 ink-text bg-white/80 px-4 py-1.5 border-2 border-slate-700 shadow-[3px_3px_0px_0px_#334155]" style={{ borderRadius: '255px 15px 225px 15px/15px 225px 15px 255px' }}>
+            <MapPin size={18} />
             <span className="font-bold text-sm tracking-wide">{loading ? 'Locating...' : locationName}</span>
           </div>
-          <div className="flex gap-2">
-            <button 
-              onClick={() => setIsAudioEnabled(!isAudioEnabled)} 
-              className={`p-2 paper-btn flex items-center justify-center transition-all ${isAudioEnabled ? 'bg-yellow-100 shadow-none translate-x-0.5 translate-y-0.5' : ''}`}
-              title={isAudioEnabled ? "Mute Atmosphere" : "Play Atmosphere"}
-            >
-              {isAudioEnabled ? <Volume2 size={20} /> : <VolumeX size={20} />}
-            </button>
-            <button onClick={locateUser} className={`p-2 paper-btn flex items-center justify-center ${loading ? 'animate-spin' : ''}`}>
-              <RefreshCw size={20} />
-            </button>
-          </div>
+          <button onClick={locateUser} className={`p-2.5 paper-btn flex items-center justify-center ${loading ? 'animate-spin' : ''}`}>
+            <RefreshCw size={20} />
+          </button>
         </div>
 
         {/* Clock */}
-        <div className="absolute top-20 left-6 ink-text rotate-[-4deg] opacity-80 z-20 flex items-center gap-1.5 bg-white bg-opacity-40 px-2 rounded-md">
+        <div className="absolute top-24 left-8 ink-text rotate-[-6deg] opacity-70 z-20 flex items-center gap-1.5 bg-yellow-50/50 px-2 border-b border-slate-400">
           <Clock size={14} />
           <span className="text-lg font-bold tracking-tight">
             {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
@@ -291,42 +254,44 @@ export default function App() {
 
         {/* Temperature scribbled */}
         {!loading && (
-          <div className="absolute top-20 right-8 font-bold text-4xl ink-text rotate-3 opacity-90 z-20" style={{ filter: 'drop-shadow(1px 1px 0px rgba(51,65,85,0.3))' }}>
+          <div className="absolute top-24 right-10 font-bold text-5xl ink-text rotate-6 opacity-90 z-20 ink-bleed" style={{ filter: 'drop-shadow(1px 1px 0px rgba(51,65,85,0.2))' }}>
             {currentTemp}
           </div>
         )}
 
         {/* Icon & Highlight */}
-        <div className="relative w-32 h-32 mb-6 flex items-center justify-center">
-          <div className={`absolute inset-0 ${currentTheme.accent} highlight-blob opacity-70 animate-float transition-colors duration-1000`}></div>
-          <CurrentIcon size={64} className="ink-text relative z-10" style={{ filter: 'drop-shadow(2px 2px 0px rgba(51,65,85,0.2))' }} />
+        <div className="relative w-40 h-40 mb-8 flex items-center justify-center">
+          <div className={`absolute inset-0 ${currentTheme.accent} highlight-blob opacity-60 animate-float transition-colors duration-1000`}></div>
+          <CurrentIcon size={80} className="ink-text relative z-10" style={{ filter: 'drop-shadow(3px 3px 0px rgba(51,65,85,0.15))' }} />
         </div>
 
-        <div className="text-sm uppercase tracking-widest font-bold mb-1 ink-text opacity-70 border-b-2 border-slate-700 border-dashed pb-1">Current Mood</div>
-        <h1 className="text-4xl font-bold mb-4 ink-text mt-2 leading-tight">{currentMood}</h1>
-        <p className="text-xl px-4 leading-relaxed ink-text font-medium opacity-90">{currentDesc}</p>
-        <div className="scribble-divider mt-8 mb-2"></div>
+        <div className="text-xs uppercase tracking-[0.3em] font-black mb-1 ink-text opacity-50 border-b-2 border-slate-700/30 border-dashed pb-1">Current Mood</div>
+        <h1 className="text-4xl font-bold mb-4 ink-text mt-3 leading-tight ink-bleed">{currentMood}</h1>
+        <p className="text-2xl px-2 leading-relaxed ink-text font-medium opacity-90 italic">"{currentDesc}"</p>
+        
+        <div className="scribble-divider mt-10 mb-2"></div>
       </div>
 
       {/* Refined Separated Footer */}
-      <footer className="mt-8 flex flex-col items-center gap-1.5 relative z-10 w-full ink-text">
-        <div className="text-lg font-bold opacity-40">~ --- ~</div>
+      <footer className="mt-10 flex flex-col items-center gap-2 relative z-10 w-full ink-text">
+        <div className="text-xl font-bold opacity-30 tracking-[1em]">***</div>
         
         <div className="flex flex-col items-center text-center">
-          <div className="flex items-center gap-1.5 text-sm font-bold opacity-80">
+          <div className="flex items-center gap-1.5 text-sm font-bold opacity-70">
             <Heart size={14} className="fill-red-400 text-slate-700" /> 
-            <span>A labor of love from Cutesense Studios</span>
+            <span>Hand-sketched by Cutesense Studios</span>
           </div>
           
-          <div className="flex items-center gap-1.5 text-xs font-bold opacity-60 mt-0.5">
-            <Sparkles size={12} className="text-yellow-600 fill-yellow-200" />
-            <span>Woven with Gemini’s digital magic</span>
+          <div className="flex items-center gap-1.5 text-xs font-bold opacity-50 mt-1">
+            <Sparkles size={12} className="text-yellow-600" />
+            <span>Refined with Gemini's creative spark</span>
           </div>
         </div>
 
-        <div className="flex items-center gap-1.5 opacity-40 mt-1 hover:opacity-100 transition-opacity cursor-help text-[9px] uppercase tracking-[0.2em]">
-          <Scale size={12} />
-          <span className="underline decoration-dotted underline-offset-4">GNU AGPL v3.0</span>
+        <div className="mt-4 opacity-30 text-[10px] uppercase tracking-widest flex items-center gap-4">
+            <span className="border border-slate-700 px-2 py-0.5 rounded">Issue #2026</span>
+            <span>•</span>
+            <span className="underline decoration-dotted">GNU AGPL v3.0</span>
         </div>
       </footer>
 
@@ -340,54 +305,70 @@ export default function App() {
         }
         
         .font-kalam { font-family: 'Kalam', cursive; }
-        .ink-text { color: #334155; }
+        .ink-text { color: #2d3748; }
         
+        /* Subtle ink bleed effect for larger text */
+        .ink-bleed {
+            text-shadow: 0.5px 0.5px 1px rgba(45, 55, 72, 0.3);
+        }
+
         .paper-card {
-          background-color: #fdfbf7;
+          background-color: #fffefc;
           border: 3px solid #334155;
-          border-radius: 2% 98% 3% 97% / 98% 3% 97% 2%;
-          box-shadow: 6px 6px 0px 0px rgba(51, 65, 85, 0.9);
-          background-image: repeating-linear-gradient(transparent, transparent 31px, #cbd5e1 31px, #cbd5e1 33px);
-          background-position: 0 1.5rem;
+          border-radius: 1% 99% 2% 98% / 99% 2% 98% 1%;
+          box-shadow: 12px 12px 0px 0px rgba(51, 65, 85, 0.1), 
+                      8px 8px 0px 0px rgba(51, 65, 85, 0.9);
+          background-image: 
+            repeating-linear-gradient(transparent, transparent 31px, #e2e8f0 31px, #e2e8f0 32px),
+            linear-gradient(90deg, #f1f5f9 1px, transparent 1px);
+          background-size: 100% 32px, 40px 100%;
+          background-position: 0 1.5rem, 2rem 0;
         }
 
         .paper-btn {
-          background-color: #fdfbf7;
+          background-color: #fffefc;
           border: 2px solid #334155;
           border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
-          box-shadow: 3px 3px 0px 0px #334155;
-          transition: all 0.1s ease;
+          box-shadow: 4px 4px 0px 0px #334155;
+          transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
           color: #334155;
         }
 
-        .paper-btn:active { transform: translate(3px, 3px); box-shadow: 0px 0px 0px 0px #334155; }
-        .highlight-blob { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; mix-blend-mode: multiply; }
+        .paper-btn:hover { transform: translate(-1px, -1px); box-shadow: 5px 5px 0px 0px #334155; }
+        .paper-btn:active { transform: translate(4px, 4px); box-shadow: 0px 0px 0px 0px #334155; }
+        
+        .highlight-blob { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; mix-blend-mode: multiply; }
         
         @keyframes float-slow {
-          0%, 100% { transform: translateY(-3px) rotate(-2deg) scale(1); }
-          50% { transform: translateY(3px) rotate(2deg) scale(1.05); }
+          0%, 100% { transform: translateY(-5px) rotate(-1deg) scale(1); }
+          50% { transform: translateY(5px) rotate(1deg) scale(1.08); }
         }
-        .animate-float { animation: float-slow 4s ease-in-out infinite; }
+        .animate-float { animation: float-slow 5s ease-in-out infinite; }
+
+        @keyframes gentle-tilt {
+            0%, 100% { transform: rotate(-0.5deg); }
+            50% { transform: rotate(0.5deg); }
+        }
+        .animate-gentle-tilt { animation: gentle-tilt 10s ease-in-out infinite; }
 
         @keyframes rain-ink {
-          0% { transform: translateY(-100vh); opacity: 0; }
-          50% { opacity: 0.8; }
-          100% { transform: translateY(100vh); opacity: 0; }
+          0% { transform: translateY(-110vh) skewX(-10deg); opacity: 0; }
+          20% { opacity: 0.6; }
+          100% { transform: translateY(110vh) skewX(-10deg); opacity: 0; }
         }
         .animate-rain-ink { animation: rain-ink linear infinite; }
 
         @keyframes snow-drift {
           0% { transform: translateY(-10vh) translateX(0) rotate(0); opacity: 0; }
           20% { opacity: 1; }
-          80% { opacity: 1; }
-          100% { transform: translateY(110vh) translateX(20px) rotate(360deg); opacity: 0; }
+          100% { transform: translateY(110vh) translateX(40px) rotate(720deg); opacity: 0; }
         }
         .animate-snow-drift { animation: snow-drift linear infinite; }
 
         .scribble-divider {
-          width: 50%; height: 8px;
-          background-image: radial-gradient(circle, #334155 2px, transparent 2px);
-          background-size: 12px 12px; background-repeat: repeat-x; opacity: 0.5;
+          width: 70%; height: 12px;
+          background-image: radial-gradient(circle, #334155 1.5px, transparent 1.5px);
+          background-size: 10px 10px; background-repeat: repeat-x; opacity: 0.3;
         }
       `}} />
     </div>
