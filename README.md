@@ -8,7 +8,6 @@
 
 * **Mood-Based Forecasts:** Uses weather codes to determine your current "mood" (e.g., Joyful & Bouncy, Sleepy & Snuggly).
 * **Atmospheric Effects:** Real-time visual layers including falling ink-style rain and drifting snowflakes based on your local weather.
-* **Ambient Audio:** Includes an optional atmospheric audio toggle to match the weather outside.
 * **Hand-Drawn Aesthetic:** A unique "paper-card" UI with custom ink-textured overlays, Kalam typography, and floating blob highlights.
 * **Geolocation Aware:** Automatically detects your location via browser API with a fallback to IP-based detection.
 * **Powered by Gemini:** Creative weather descriptions and logic woven with AI assistance.
