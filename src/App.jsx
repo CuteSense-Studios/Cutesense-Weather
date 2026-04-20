@@ -1,19 +1,37 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  Sun, 
-  Cloud, 
-  CloudRain, 
-  CloudLightning, 
-  Snowflake, 
-  MapPin, 
-  RefreshCw, 
-  Heart, 
-  Scale, 
-  Sparkles, 
-  Clock 
-} from 'lucide-react';
+import React, { useState, useEffect, useMemo, memo } from 'react';
 
-// --- Weather Dictionary (Effects updated for realism) ---
+// --- Local Lucide Icons ---
+const LocalIcon = ({ children, size = 24, className = '', style = {}, ...props }) => (
+  <svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    width={size} 
+    height={size} 
+    viewBox="0 0 24 24" 
+    fill="none" 
+    stroke="currentColor" 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round" 
+    className={className} 
+    style={style} 
+    {...props}
+  >
+    {children}
+  </svg>
+);
+
+const Sun = (props) => <LocalIcon {...props}><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></LocalIcon>;
+const Cloud = (props) => <LocalIcon {...props}><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></LocalIcon>;
+const CloudRain = (props) => <LocalIcon {...props}><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M16 14v6"/><path d="M8 14v6"/><path d="M12 16v6"/></LocalIcon>;
+const CloudLightning = (props) => <LocalIcon {...props}><path d="M6 16.326A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 .5 8.973"/><path d="m13 12-3 5h4l-3 5"/></LocalIcon>;
+const Snowflake = (props) => <LocalIcon {...props}><line x1="2" x2="22" y1="12" y2="12"/><line x1="12" x2="12" y1="2" y2="22"/><path d="m20 16-4-4 4-4"/><path d="m4 8 4 4-4 4"/><path d="m16 4-4 4-4-4"/><path d="m8 20 4-4 4 4"/></LocalIcon>;
+const MapPin = (props) => <LocalIcon {...props}><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></LocalIcon>;
+const RefreshCw = (props) => <LocalIcon {...props}><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></LocalIcon>;
+const Heart = (props) => <LocalIcon {...props}><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></LocalIcon>;
+const Sparkles = (props) => <LocalIcon {...props}><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></LocalIcon>;
+const Clock = (props) => <LocalIcon {...props}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></LocalIcon>;
+
+// --- Weather Dictionary (Balanced Color Palette) ---
 const WEATHER_DICTIONARY = {
   clear: {
     codes: [0],
@@ -21,7 +39,7 @@ const WEATHER_DICTIONARY = {
     mood: 'Joyful & Bouncy ✨',
     description: 'Perfect day for a cute picnic or sketching outside!',
     icon: Sun,
-    theme: { bg: '#fdf4ff', accent: 'bg-yellow-200' },
+    theme: { bg: '#fdf2f8', accent: 'bg-pink-300' }, 
     effect: 'sun'
   },
   cloudy: {
@@ -30,7 +48,7 @@ const WEATHER_DICTIONARY = {
     mood: 'Cozy & Calm 🍵',
     description: 'A gentle sky. Great time to doodle near the window.',
     icon: Cloud,
-    theme: { bg: '#f1f5f9', accent: 'bg-slate-200' },
+    theme: { bg: '#f1f5f9', accent: 'bg-slate-300' },
     effect: 'fog'
   },
   fog: {
@@ -39,7 +57,7 @@ const WEATHER_DICTIONARY = {
     mood: 'Mysterious & Thoughtful 🌫️',
     description: 'The world looks so soft and painted today.',
     icon: Cloud,
-    theme: { bg: '#fafafa', accent: 'bg-zinc-300' },
+    theme: { bg: '#fafafa', accent: 'bg-zinc-400' },
     effect: 'fog'
   },
   rain: {
@@ -48,7 +66,7 @@ const WEATHER_DICTIONARY = {
     mood: 'Sleepy & Snuggly 🌧️',
     description: 'Pitter patter! Time to wrap up in your softest blanket.',
     icon: CloudRain,
-    theme: { bg: '#f0f9ff', accent: 'bg-blue-200' },
+    theme: { bg: '#eff6ff', accent: 'bg-blue-600' }, 
     effect: 'rain'
   },
   snow: {
@@ -57,7 +75,7 @@ const WEATHER_DICTIONARY = {
     mood: 'Playful & Chilly ❄️',
     description: 'Brrr! Let\'s draw a tiny snowman!',
     icon: Snowflake,
-    theme: { bg: '#f8fafc', accent: 'bg-cyan-100' },
+    theme: { bg: '#f8fafc', accent: 'bg-cyan-200' },
     effect: 'snow'
   },
   storm: {
@@ -66,7 +84,7 @@ const WEATHER_DICTIONARY = {
     mood: 'A little anxious! ⚡',
     description: 'Loud noises outside, but it\'s safe and warm in here.',
     icon: CloudLightning,
-    theme: { bg: '#f5f3ff', accent: 'bg-purple-200' },
+    theme: { bg: '#fff1f2', accent: 'bg-red-500' }, 
     effect: 'storm'
   }
 };
@@ -78,61 +96,90 @@ const getWeatherState = (code) => {
   return WEATHER_DICTIONARY.clear;
 };
 
-// --- New Real Paper Weather Effects ---
+// --- Isolated Clock Component (Prevents App Re-renders) ---
+const ClockDisplay = () => {
+  const [time, setTime] = useState(new Date());
+  
+  useEffect(() => {
+    const timer = setInterval(() => setTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
 
-const RainDropsPaper = () => {
-  const drops = Array.from({ length: 120 }); // Massively increased density
+  return (
+    <span className="text-lg font-bold tracking-tight">
+      {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+    </span>
+  );
+};
+
+// --- Memoized Real Paper Weather Effects ---
+const RainDropsPaper = memo(() => {
+  const drops = useMemo(() => Array.from({ length: 120 }).map(() => ({
+    left: `${Math.random() * 100}%`,
+    width: `${Math.random() > 0.8 ? 2 : 1.5}px`,
+    height: `${8 + Math.random() * 25}px`,
+    duration: `${0.3 + Math.random() * 0.3}s`,
+    delay: `${Math.random() * 2}s`
+  })), []);
+
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-30">
-      {drops.map((_, i) => (
+      {drops.map((style, i) => (
         <div 
           key={i} 
           className="absolute bg-slate-500 rounded-full animate-rain-paper"
           style={{
-            left: `${Math.random() * 100}%`,
-            width: `${Math.random() > 0.8 ? 2 : 1.5}px`, // Slight variation
-            height: `${8 + Math.random() * 25}px`,
-            animationDuration: `${0.3 + Math.random() * 0.3}s`,
-            animationDelay: `${Math.random() * 2}s`
+            left: style.left,
+            width: style.width,
+            height: style.height,
+            animationDuration: style.duration,
+            animationDelay: style.delay
           }}
         />
       ))}
     </div>
   );
-};
+});
 
-const SnowFlakesPaper = () => {
-  const flakes = Array.from({ length: 90 }); // Significantly increased density
+const SnowFlakesPaper = memo(() => {
   const colors = ['#ffffff', '#f1f5f9', '#e2e8f0'];
+  const flakes = useMemo(() => Array.from({ length: 90 }).map(() => {
+    const size = 5 + Math.random() * 12;
+    return {
+      bg: colors[Math.floor(Math.random() * colors.length)],
+      left: `${Math.random() * 100}%`,
+      width: `${size}px`,
+      height: `${size}px`,
+      radius: Math.random() > 0.3 ? '50%' : '2px',
+      duration: `${3 + Math.random() * 6}s`,
+      delay: `${Math.random() * 5}s`
+    };
+  }), []);
+
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-70">
-      {flakes.map((_, i) => {
-        const size = 5 + Math.random() * 12; // Wider size range
-        const isCircle = Math.random() > 0.3;
-        return (
-          <div 
-            key={i} 
-            className="absolute animate-snow-drift border border-slate-200/50"
-            style={{
-              backgroundColor: colors[Math.floor(Math.random() * colors.length)],
-              left: `${Math.random() * 100}%`,
-              width: `${size}px`,
-              height: `${size}px`,
-              borderRadius: isCircle ? '50%' : '2px', // Some dots, some tiny square paper cuts
-              boxShadow: '1px 1px 2px rgba(51, 65, 85, 0.1)',
-              animationDuration: `${3 + Math.random() * 6}s`,
-              animationDelay: `${Math.random() * 5}s`
-            }}
-          />
-        );
-      })}
+      {flakes.map((style, i) => (
+        <div 
+          key={i} 
+          className="absolute animate-snow-drift border border-slate-200/50"
+          style={{
+            backgroundColor: style.bg,
+            left: style.left,
+            width: style.width,
+            height: style.height,
+            borderRadius: style.radius,
+            boxShadow: '1px 1px 2px rgba(51, 65, 85, 0.1)',
+            animationDuration: style.duration,
+            animationDelay: style.delay
+          }}
+        />
+      ))}
     </div>
   );
-};
+});
 
-const FogMistPaper = () => (
+const FogMistPaper = memo(() => (
   <div className="absolute inset-0 pointer-events-none opacity-25">
-    {/* Multiple layered, irregular paper shapes floating in fog */}
     {[
       { delay: '0s', size: '64', color: 'slate-100', top: '15%', left: '-25%', rotate: '15deg' },
       { delay: '2s', size: '80', color: 'slate-200', bottom: '10%', right: '-30%', rotate: '-10deg' },
@@ -151,43 +198,31 @@ const FogMistPaper = () => (
       />
     ))}
   </div>
-);
+));
 
-const SunPaper = () => (
+const SunPaper = memo(() => (
   <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-15">
-    {/* Background Sun Layer */}
     <div className="absolute top-[-10%] left-[-10%] w-[120%] h-[120%] bg-[radial-gradient(circle,rgba(253,224,71,0.25)_0%,transparent_70%)] animate-pulse" style={{ animationDuration: '6s' }} />
-    {/* Layered, stylized paper-cut sun in the background */}
     <div className="absolute top-10 right-10 w-48 h-48 opacity-60 z-0">
         <div className="absolute inset-0 bg-yellow-400 rotate-[-10deg] paper-blob scale-[1.05]" style={{ borderRadius: '40% 60% 70% 30% / 40% 50% 60% 50%'}}></div>
         <div className="absolute inset-2 bg-yellow-300 rotate-[8deg] paper-blob" style={{ borderRadius: '60% 40% 30% 70% / 50% 50% 50% 50%'}}></div>
     </div>
   </div>
-);
+));
 
-// --- Global Real Desk Scrapbook Objects ---
-const DeskScrapbookObjects = () => (
+const DeskScrapbookObjects = memo(() => (
   <div className="absolute inset-0 pointer-events-none opacity-[0.05] z-0">
-    {/* Stylized Desk Items */}
-    <div className="absolute top-[30%] -right-16 w-32 h-32 border-[10px] border-slate-700/60 rotate-[-15deg]" style={{ borderRadius: '50%'}}></div> {/* Coffee Ring */}
-    <div className="absolute bottom-[20%] -left-10 w-40 h-8 bg-slate-400/80 border border-slate-700/80 rotate-[-4deg]"></div> {/* Tiny Pencil */}
-    <div className="absolute bottom-[40%] -right-12 w-20 h-16 border-2 border-slate-700/80 rotate-[10deg]"></div> {/* Tiny Paperclip */}
+    <div className="absolute top-[30%] -right-16 w-32 h-32 border-[10px] border-slate-700/60 rotate-[-15deg]" style={{ borderRadius: '50%'}}></div>
+    <div className="absolute bottom-[20%] -left-10 w-40 h-8 bg-slate-400/80 border border-slate-700/80 rotate-[-4deg]"></div>
+    <div className="absolute bottom-[40%] -right-12 w-20 h-16 border-2 border-slate-700/80 rotate-[10deg]"></div>
   </div>
-);
+));
 
 export default function App() {
   const [weatherData, setWeatherData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [locationName, setLocationName] = useState('Detecting location...');
-  const [time, setTime] = useState(new Date());
-  
-  // Clock Effect
-  useEffect(() => {
-    const timer = setInterval(() => setTime(new Date()), 1000);
-    return () => clearInterval(timer);
-  }, []);
 
-  // Favicon and Title Effect
   useEffect(() => {
     document.title = "Cutesense Weather";
     const link = document.querySelector("link[rel~='icon']") || document.createElement('link');
@@ -247,6 +282,7 @@ export default function App() {
 
   useEffect(() => {
     locateUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const dataState = weatherData ? getWeatherState(weatherData.weathercode) : WEATHER_DICTIONARY.clear;
@@ -286,7 +322,7 @@ export default function App() {
             Cozy Approved
         </div>
 
-        {/* Washi Tape - Text Removed per user request */}
+        {/* Washi Tape */}
         <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-32 h-10 bg-blue-100/60 border-x-2 border-dashed border-blue-300/50 rotate-[-1deg] z-30 mix-blend-multiply flex items-center justify-center overflow-hidden">
         </div>
 
@@ -301,12 +337,10 @@ export default function App() {
           </button>
         </div>
 
-        {/* Clock */}
+        {/* Clock Component */}
         <div className="absolute top-24 left-8 ink-text rotate-[-6deg] opacity-70 z-20 flex items-center gap-1.5 bg-yellow-50/50 px-2 border-b border-slate-400">
           <Clock size={14} />
-          <span className="text-lg font-bold tracking-tight">
-            {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-          </span>
+          <ClockDisplay />
         </div>
 
         {/* Temperature */}
@@ -316,9 +350,9 @@ export default function App() {
           </div>
         )}
 
-        {/* Icon */}
+        {/* Icon - Updated with animate-float-blob */}
         <div className="relative w-40 h-40 mb-8 flex items-center justify-center">
-          <div className={`absolute inset-0 ${currentTheme.accent} highlight-blob opacity-60 animate-float transition-colors duration-1000`}></div>
+          <div className={`absolute inset-0 ${currentTheme.accent} highlight-blob opacity-60 animate-float-blob transition-colors duration-1000`}></div>
           <CurrentIcon size={80} className="ink-text relative z-10" style={{ filter: 'drop-shadow(3px 3px 0px rgba(51,65,85,0.15))' }} />
         </div>
 
@@ -392,12 +426,26 @@ export default function App() {
         .paper-btn:hover { transform: translate(-1px, -1px); box-shadow: 5px 5px 0px 0px #334155; }
         .paper-btn:active { transform: translate(4px, 4px); box-shadow: 0px 0px 0px 0px #334155; }
         
-        .highlight-blob, .paper-blob { mix-blend-mode: multiply; filter: drop-shadow(1px 1px 1px rgba(51, 65, 85, 0.1)); }
+        .highlight-blob, .paper-blob { 
+          mix-blend-mode: multiply; 
+          filter: drop-shadow(1px 1px 1px rgba(51, 65, 85, 0.1)); 
+        }
         
+        @keyframes morph-blob {
+          0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+          50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+        }
+
         @keyframes float-slow {
           0%, 100% { transform: translateY(-5px) rotate(-1deg) scale(1); }
           50% { transform: translateY(5px) rotate(1deg) scale(1.08); }
         }
+
+        /* Combined animation for floating AND morphing the shape */
+        .animate-float-blob { 
+          animation: float-slow 5s ease-in-out infinite, morph-blob 8s ease-in-out infinite alternate; 
+        }
+
         .animate-float { animation: float-slow 5s ease-in-out infinite; }
 
         @keyframes paper-float {
