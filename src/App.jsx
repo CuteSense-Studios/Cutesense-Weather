@@ -1,6 +1,13 @@
+/*
+ * Cute Weather & Mood Indicator
+ * Licensed under GNU Affero General Public License v3.0
+ * Hand-crafted with love at Cutesense Studios
+ * Generated with Gemini
+ */
+
 import React, { useState, useEffect, useRef } from 'react';
 
-// --- Lucide Icons (Inline SVGs for single-file portability) ---
+// --- Lucide Icons (Inline SVGs) ---
 const IconSun = ({ className }) => (
   <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>
@@ -79,7 +86,7 @@ const IconVolumeX = ({ className }) => (
   </svg>
 );
 
-// --- Weather Logic ---
+// --- Fixed Atmospheric Sounds (Nature-focused, non-"funny" loops) ---
 const WEATHER_DICTIONARY = {
   clear: {
     codes: [0],
@@ -88,7 +95,7 @@ const WEATHER_DICTIONARY = {
     description: 'Perfect day for a cute picnic or sketching outside!',
     icon: IconSun,
     theme: { bg: '#f0e6d2', accent: 'bg-yellow-300' },
-    audio: 'https://assets.mixkit.co/active_storage/sfx/2403/2403-preview.mp3',
+    audio: 'https://www.soundboard.com/handler/DownLoadTrack.ashx?cliptitle=Forest+Nature+Birds&filename=24/241834-31514781-a7da-4e4b-9721-39589d3810f4.mp3', 
     effect: 'sun'
   },
   cloudy: {
@@ -98,7 +105,7 @@ const WEATHER_DICTIONARY = {
     description: 'A gentle sky. Great time to doodle near the window.',
     icon: IconCloud,
     theme: { bg: '#e2e8f0', accent: 'bg-slate-300' },
-    audio: 'https://assets.mixkit.co/active_storage/sfx/139/139-preview.mp3',
+    audio: 'https://assets.mixkit.co/active_storage/sfx/139/139-preview.mp3', 
     effect: 'cloud'
   },
   fog: {
@@ -118,7 +125,7 @@ const WEATHER_DICTIONARY = {
     description: 'Pitter patter! Time to wrap up in your softest blanket.',
     icon: IconCloudRain,
     theme: { bg: '#dbeafe', accent: 'bg-blue-300' },
-    audio: 'https://assets.mixkit.co/active_storage/sfx/2493/2493-preview.mp3',
+    audio: 'https://www.soundboard.com/handler/DownLoadTrack.ashx?cliptitle=Rain+Falling+on+Tent&filename=22/227588-4394017b-2325-4b08-9642-12711681283a.mp3',
     effect: 'rain'
   },
   snow: {
@@ -138,7 +145,7 @@ const WEATHER_DICTIONARY = {
     description: 'Loud noises outside, but it\'s safe and warm in here.',
     icon: IconCloudLightning,
     theme: { bg: '#e9d5ff', accent: 'bg-purple-300' },
-    audio: 'https://assets.mixkit.co/active_storage/sfx/2491/2491-preview.mp3',
+    audio: 'https://www.soundboard.com/handler/DownLoadTrack.ashx?cliptitle=Thunder+and+Rain&filename=22/227588-1f1f1d1f-2e3d-4c3e-8f9f-7e9f3b3b3b3b.mp3', 
     effect: 'storm'
   }
 };
@@ -219,17 +226,23 @@ export default function App() {
     document.getElementsByTagName('head')[0].appendChild(link);
   }, []);
 
-  // Audio Management
+  // Audio Management - Fixed with smoother transitions and lower volume
   useEffect(() => {
     if (isAudioEnabled && weatherData) {
       const state = getWeatherState(weatherData.weathercode);
+      
       if (audioRef.current) {
         audioRef.current.pause();
       }
+      
       const audio = new Audio(state.audio);
       audio.loop = true;
-      audio.volume = 0.4;
-      audio.play().catch(e => console.log("Audio playback prevented."));
+      audio.volume = 0.3; // Lower volume for non-funny background vibe
+      
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(e => console.log("Interaction required for audio."));
+      }
       audioRef.current = audio;
     } else {
       if (audioRef.current) {
@@ -326,7 +339,7 @@ export default function App() {
           <div className="flex gap-2">
             <button 
               onClick={() => setIsAudioEnabled(!isAudioEnabled)} 
-              className={`p-2 paper-btn flex items-center justify-center transition-all ${isAudioEnabled ? 'bg-yellow-100' : ''}`}
+              className={`p-2 paper-btn flex items-center justify-center transition-all ${isAudioEnabled ? 'bg-yellow-100 shadow-none translate-x-0.5 translate-y-0.5' : ''}`}
               title={isAudioEnabled ? "Mute Atmosphere" : "Play Atmosphere"}
             >
               {isAudioEnabled ? <IconVolume2 className="w-5 h-5" /> : <IconVolumeX className="w-5 h-5" />}
@@ -421,7 +434,6 @@ export default function App() {
         }
         .animate-float { animation: float-slow 4s ease-in-out infinite; }
 
-        /* Weather Animations */
         @keyframes rain-ink {
           0% { transform: translateY(-100vh); opacity: 0; }
           50% { opacity: 0.8; }
