@@ -3,7 +3,7 @@ import React, { useState, useEffect, useMemo, memo } from 'react';
 // --- Local Lucide Icons ---
 const LocalIcon = ({ children, size = 24, className = '', style = {}, ...props }) => (
   <svg 
-    xmlns="http://www.w3.org/2000/svg" 
+    xmlns="./public/assets/icons/favicon.svg" 
     width={size} 
     height={size} 
     viewBox="0 0 24 24" 
@@ -228,8 +228,7 @@ export default function App() {
     const link = document.querySelector("link[rel~='icon']") || document.createElement('link');
     link.type = 'image/svg+xml';
     link.rel = 'icon';
-    const svgString = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#334155" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>`;
-    link.href = `data:image/svg+xml;base64,${btoa(svgString)}`;
+    link.href = '/assets/icons/favicon.svg';
     document.getElementsByTagName('head')[0].appendChild(link);
   }, []);
 

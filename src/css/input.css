@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+@theme {
+  /* Your custom font */
+  --font-kalam: "Kalam", cursive;
+
+  /* Your scrapbook animations */
+  --animate-float-blob: float-slow 5s ease-in-out infinite, morph-blob 8s ease-in-out infinite alternate;
+  --animate-paper-float: paper-float 15s ease-in-out infinite;
+  --animate-gentle-tilt: gentle-tilt 10s ease-in-out infinite;
+  --animate-rain-paper: rain-paper linear infinite;
+  --animate-snow-drift: snow-drift linear infinite;
+
+  /* Keyframes for the animations above */
+  @keyframes float-slow {
+    0%, 100% { transform: translateY(-5px) rotate(-1deg) scale(1); }
+    50% { transform: translateY(5px) rotate(1deg) scale(1.08); }
+  }
+  /* ... add your other keyframes here ... */
+}
+
+/* You can move your .paper-card and .ink-stamp styles here too! */
+@layer components {
+  .paper-card {
+    @apply relative p-10 flex flex-col items-center text-center z-10;
+    background-color: #fffefc;
+    border: 3px solid #334155;
+    border-radius: 1% 99% 2% 98% / 99% 2% 98% 1%;
+  }
+}
