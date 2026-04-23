@@ -3,7 +3,7 @@ import React, { useState, useEffect, useMemo, memo } from 'react';
 // --- Local Lucide Icons ---
 const LocalIcon = ({ children, size = 24, className = '', style = {}, ...props }) => (
   <svg 
-    xmlns="./assets/icons/favicon.svg" 
+    xmlns="http://www.w3.org/2000/svg" 
     width={size} 
     height={size} 
     viewBox="0 0 24 24" 
@@ -31,7 +31,7 @@ const Heart = (props) => <LocalIcon {...props}><path d="M19 14c1.49-1.46 3-3.21 
 const Sparkles = (props) => <LocalIcon {...props}><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></LocalIcon>;
 const Clock = (props) => <LocalIcon {...props}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></LocalIcon>;
 
-// --- Weather Dictionary (Balanced Color Palette) ---
+// --- Weather Dictionary ---
 const WEATHER_DICTIONARY = {
   clear: {
     codes: [0],
@@ -96,7 +96,6 @@ const getWeatherState = (code) => {
   return WEATHER_DICTIONARY.clear;
 };
 
-// --- Isolated Clock Component (Prevents App Re-renders) ---
 const ClockDisplay = () => {
   const [time, setTime] = useState(new Date());
   
@@ -112,7 +111,6 @@ const ClockDisplay = () => {
   );
 };
 
-// --- Memoized Real Paper Weather Effects ---
 const RainDropsPaper = memo(() => {
   const drops = useMemo(() => Array.from({ length: 120 }).map(() => ({
     left: `${Math.random() * 100}%`,
@@ -228,7 +226,8 @@ export default function App() {
     const link = document.querySelector("link[rel~='icon']") || document.createElement('link');
     link.type = 'image/svg+xml';
     link.rel = 'icon';
-    link.href = '/assets/icons/favicon.svg';
+    // Path updated to new assets folder
+    link.href = 'src/assets/icons/favicon.svg';
     document.getElementsByTagName('head')[0].appendChild(link);
   }, []);
 
@@ -281,7 +280,6 @@ export default function App() {
 
   useEffect(() => {
     locateUser();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const dataState = weatherData ? getWeatherState(weatherData.weathercode) : WEATHER_DICTIONARY.clear;
@@ -303,29 +301,24 @@ export default function App() {
       {dataState.effect === 'sun' ? <SunPaper /> : null}
       <DeskScrapbookObjects />
 
-      {/* Real Papery Textures */}
       <div className="absolute inset-0 pointer-events-none opacity-[0.1] bg-repeat mix-blend-multiply" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/p6.png")' }}></div>
       <div className="absolute inset-0 pointer-events-none opacity-[0.08] bg-repeat" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/cardboard-flat.png")' }}></div>
 
       {/* Main Card */}
       <div className="max-w-md w-full paper-card relative p-10 flex flex-col items-center text-center z-10 animate-gentle-tilt">
         
-        {/* Decorative Photo Corners */}
         <div className="absolute top-0 left-0 w-8 h-8 border-t-[5px] border-l-[5px] border-slate-700 opacity-80" style={{ borderRadius: '5px 0 20px 0'}}></div>
         <div className="absolute top-0 right-0 w-8 h-8 border-t-[5px] border-r-[5px] border-slate-700 opacity-80" style={{ borderRadius: '0 5px 0 20px'}}></div>
         <div className="absolute bottom-0 left-0 w-8 h-8 border-b-[5px] border-l-[5px] border-slate-700 opacity-80" style={{ borderRadius: '0 20px 5px 0'}}></div>
         <div className="absolute bottom-0 right-0 w-8 h-8 border-b-[5px] border-r-[5px] border-slate-700 opacity-80" style={{ borderRadius: '20px 0 0 5px'}}></div>
 
-        {/* Ink Stamp */}
         <div className="absolute bottom-6 right-6 opacity-30 z-20 border-4 border-double border-red-700/80 ink-stamp rotate-[15deg] p-1.5 font-bold tracking-widest uppercase text-red-900/90 text-xs"> 
             Cozy Approved
         </div>
 
-        {/* Washi Tape */}
         <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-32 h-10 bg-blue-100/60 border-x-2 border-dashed border-blue-300/50 rotate-[-1deg] z-30 mix-blend-multiply flex items-center justify-center overflow-hidden">
         </div>
 
-        {/* Top Bar */}
         <div className="flex justify-between items-center w-full mb-10 relative z-10">
           <div className="flex items-center gap-2 ink-text bg-white/80 px-4 py-1.5 border-2 border-slate-700 shadow-[3px_3px_0px_0px_#334155]" style={{ borderRadius: '255px 15px 225px 15px/15px 225px 15px 255px' }}>
             <MapPin size={18} />
@@ -336,20 +329,17 @@ export default function App() {
           </button>
         </div>
 
-        {/* Clock Component */}
         <div className="absolute top-24 left-8 ink-text rotate-[-6deg] opacity-70 z-20 flex items-center gap-1.5 bg-yellow-50/50 px-2 border-b border-slate-400">
           <Clock size={14} />
           <ClockDisplay />
         </div>
 
-        {/* Temperature */}
         {!loading && (
           <div className="absolute top-24 right-10 font-bold text-5xl ink-text rotate-6 opacity-90 z-20 ink-bleed" style={{ filter: 'drop-shadow(1px 1px 0px rgba(51,65,85,0.2))' }}>
             {currentTemp}
           </div>
         )}
 
-        {/* Icon - Updated with animate-float-blob */}
         <div className="relative w-40 h-40 mb-8 flex items-center justify-center">
           <div className={`absolute inset-0 ${currentTheme.accent} highlight-blob opacity-60 animate-float-blob transition-colors duration-1000`}></div>
           <CurrentIcon size={80} className="ink-text relative z-10" style={{ filter: 'drop-shadow(3px 3px 0px rgba(51,65,85,0.15))' }} />
@@ -362,7 +352,6 @@ export default function App() {
         <div className="scribble-divider mt-10 mb-2"></div>
       </div>
 
-      {/* Footer */}
       <footer className="mt-10 flex flex-col items-center gap-2 relative z-10 w-full ink-text">
         <div className="text-xl font-bold opacity-30 tracking-[1em]">***</div>
         <div className="flex flex-col items-center text-center">
@@ -382,11 +371,11 @@ export default function App() {
         </div>
       </footer>
 
-      {/* Custom Styles */}
       <style dangerouslySetInnerHTML={{__html: `
         @font-face {
           font-family: 'Kalam';
-          src: url('/fonts/kalam-v18-latin-regular.woff2') format('woff2');
+          /* Font path updated to new assets folder */
+          src: url('src/assets/fonts/kalam-v18-latin-regular.woff2') format('woff2');
           font-weight: 400;
           font-style: normal;
         }
@@ -440,12 +429,9 @@ export default function App() {
           50% { transform: translateY(5px) rotate(1deg) scale(1.08); }
         }
 
-        /* Combined animation for floating AND morphing the shape */
         .animate-float-blob { 
           animation: float-slow 5s ease-in-out infinite, morph-blob 8s ease-in-out infinite alternate; 
         }
-
-        .animate-float { animation: float-slow 5s ease-in-out infinite; }
 
         @keyframes paper-float {
             0%, 100% { transform: translate(0,0) rotate(-1deg); }
