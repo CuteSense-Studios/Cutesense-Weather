@@ -3,7 +3,7 @@ import React, { useState, useEffect, useMemo, memo } from 'react';
 // --- Local Lucide Icons ---
 const LocalIcon = ({ children, size = 24, className = '', style = {}, ...props }) => (
   <svg 
-    xmlns="./public/assets/icons/favicon.svg" 
+    xmlns="./assets/icons/favicon.svg" 
     width={size} 
     height={size} 
     viewBox="0 0 24 24" 
