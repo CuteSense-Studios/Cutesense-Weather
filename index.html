@@ -2,7 +2,21 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="./src/assets/icons/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="%BASE_URL%favicon.svg" />
+    <script type="module">
+      // #region agent log
+      (async () => {
+        try {
+          const baseUrl = import.meta.env.BASE_URL || '/';
+          const faviconUrl = new URL(`${baseUrl}favicon.svg`, window.location.origin).toString();
+          const res = await fetch(faviconUrl, { method: 'HEAD', cache: 'no-store' });
+          fetch('http://127.0.0.1:7678/ingest/8f249182-6124-4e5a-8b39-1e6be2004bce',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'1b9c81'},body:JSON.stringify({sessionId:'1b9c81',runId:'pre-fix',hypothesisId:'H1',location:'index.html:head',message:'Favicon HEAD check',data:{baseUrl,faviconUrl,status:res.status,ok:res.ok},timestamp:Date.now()})}).catch(()=>{});
+        } catch (e) {
+          fetch('http://127.0.0.1:7678/ingest/8f249182-6124-4e5a-8b39-1e6be2004bce',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'1b9c81'},body:JSON.stringify({sessionId:'1b9c81',runId:'pre-fix',hypothesisId:'H1',location:'index.html:head',message:'Favicon HEAD check failed',data:{error:String(e)},timestamp:Date.now()})}).catch(()=>{});
+        }
+      })();
+      // #endregion agent log
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Cutesense Weather</title>
   </head>
