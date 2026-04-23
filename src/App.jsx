@@ -234,15 +234,14 @@ export default function App() {
     const link = document.querySelector("link[rel~='icon']") || document.createElement('link');
     link.type = 'image/svg+xml';
     link.rel = 'icon';
-    // Path updated to new assets folder
-    link.href = 'src/assets/icons/favicon.svg';
+    link.href = `${import.meta.env.BASE_URL}assets/icons/favicon.svg`;
     document.getElementsByTagName('head')[0].appendChild(link);
     // #region agent log
     (async () => {
       try {
         const href = link.href;
         const res = await fetch(href, { method: 'HEAD', cache: 'no-store' });
-        fetch('http://127.0.0.1:7678/ingest/8f249182-6124-4e5a-8b39-1e6be2004bce',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'1b9c81'},body:JSON.stringify({sessionId:'1b9c81',runId:'pre-fix',hypothesisId:'H2',location:'src/App.jsx:useEffect(icon)',message:'After favicon override',data:{assignedHref:'src/assets/icons/favicon.svg',resolvedHref:href,status:res.status,ok:res.ok},timestamp:Date.now()})}).catch(()=>{});
+        fetch('http://127.0.0.1:7678/ingest/8f249182-6124-4e5a-8b39-1e6be2004bce',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'1b9c81'},body:JSON.stringify({sessionId:'1b9c81',runId:'pre-fix',hypothesisId:'H2',location:'src/App.jsx:useEffect(icon)',message:'After favicon override',data:{assignedHref:`${import.meta.env.BASE_URL}assets/icons/favicon.svg`,resolvedHref:href,status:res.status,ok:res.ok},timestamp:Date.now()})}).catch(()=>{});
       } catch (e) {
         fetch('http://127.0.0.1:7678/ingest/8f249182-6124-4e5a-8b39-1e6be2004bce',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'1b9c81'},body:JSON.stringify({sessionId:'1b9c81',runId:'pre-fix',hypothesisId:'H2',location:'src/App.jsx:useEffect(icon)',message:'After favicon override (HEAD failed)',data:{error:String(e),resolvedHref:link?.href||null},timestamp:Date.now()})}).catch(()=>{});
       }
@@ -393,8 +392,7 @@ export default function App() {
       <style dangerouslySetInnerHTML={{__html: `
         @font-face {
           font-family: 'Kalam';
-          /* Font path updated to new assets folder */
-          src: url('src/assets/fonts/kalam-v18-latin-regular.woff2') format('woff2');
+          src: url('${import.meta.env.BASE_URL}assets/fonts/kalam-v18-latin-regular.woff2') format('woff2');
           font-weight: 400;
           font-style: normal;
         }
