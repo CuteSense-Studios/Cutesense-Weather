@@ -223,30 +223,11 @@ export default function App() {
 
   useEffect(() => {
     document.title = "Cutesense Weather";
-    // #region agent log
-    try {
-      const existing = document.querySelector("link[rel~='icon']");
-      fetch('http://127.0.0.1:7678/ingest/8f249182-6124-4e5a-8b39-1e6be2004bce',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'1b9c81'},body:JSON.stringify({sessionId:'1b9c81',runId:'pre-fix',hypothesisId:'H2',location:'src/App.jsx:useEffect(icon)',message:'Before favicon override',data:{hasExisting:Boolean(existing),existingHref:existing?.href||null,baseUrl:import.meta?.env?.BASE_URL||null,locationHref:window.location.href},timestamp:Date.now()})}).catch(()=>{});
-    } catch (e) {
-      fetch('http://127.0.0.1:7678/ingest/8f249182-6124-4e5a-8b39-1e6be2004bce',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'1b9c81'},body:JSON.stringify({sessionId:'1b9c81',runId:'pre-fix',hypothesisId:'H2',location:'src/App.jsx:useEffect(icon)',message:'Before favicon override (log failed)',data:{error:String(e)},timestamp:Date.now()})}).catch(()=>{});
-    }
-    // #endregion agent log
     const link = document.querySelector("link[rel~='icon']") || document.createElement('link');
     link.type = 'image/svg+xml';
     link.rel = 'icon';
     link.href = `${import.meta.env.BASE_URL}assets/icons/favicon.svg`;
     document.getElementsByTagName('head')[0].appendChild(link);
-    // #region agent log
-    (async () => {
-      try {
-        const href = link.href;
-        const res = await fetch(href, { method: 'HEAD', cache: 'no-store' });
-        fetch('http://127.0.0.1:7678/ingest/8f249182-6124-4e5a-8b39-1e6be2004bce',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'1b9c81'},body:JSON.stringify({sessionId:'1b9c81',runId:'pre-fix',hypothesisId:'H2',location:'src/App.jsx:useEffect(icon)',message:'After favicon override',data:{assignedHref:`${import.meta.env.BASE_URL}assets/icons/favicon.svg`,resolvedHref:href,status:res.status,ok:res.ok},timestamp:Date.now()})}).catch(()=>{});
-      } catch (e) {
-        fetch('http://127.0.0.1:7678/ingest/8f249182-6124-4e5a-8b39-1e6be2004bce',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'1b9c81'},body:JSON.stringify({sessionId:'1b9c81',runId:'pre-fix',hypothesisId:'H2',location:'src/App.jsx:useEffect(icon)',message:'After favicon override (HEAD failed)',data:{error:String(e),resolvedHref:link?.href||null},timestamp:Date.now()})}).catch(()=>{});
-      }
-    })();
-    // #endregion agent log
   }, []);
 
   const fetchWeather = async (lat, lon) => {
